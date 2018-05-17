@@ -9,6 +9,12 @@ import mvc.modelo.dominio.Alquiler;
 import mvc.modelo.dominio.Cliente;
 import mvc.modelo.dominio.ExcepcionAlquilerVehiculos;
 import mvc.modelo.dominio.vehiculo.Vehiculo;
+import com.mysql.jdbc.PreparedStatement;
+import com.mysql.jdbc.Statement;
+import com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException;
+import mvc.modelo.bd.ConexionBD;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 
 /**
  * @author Francisco Jesus Latorre Garcia <franlatorregarcia@gmail.com>
@@ -17,7 +23,7 @@ public class Alquileres {
 
     public List<Alquiler> getAlquiler() {
         List<Alquiler> alquileres = new Vector<Alquiler>();
-        Connection conexion = accesoBD.estableceConexion();
+        Connection conexion = ConexionBD.estableceConexion();
         try {
             String sentenciaStr = "select idCliente, idVehiculo, fecha, dias from alquileres";
             Statement sentencia = (Statement) conexion.createStatement();
@@ -33,14 +39,13 @@ public class Alquileres {
                 alquileres.add(alquiler);
             }
         } catch (SQLException e) {
-            accesoBD.cierraConexion(conexion);
+            ConexionBD.cierraConexion(conexion);
             throw new ExcepcionAlquilerVehiculos("SQL Exception: " + e.toString());
         }
-        accesoBD.cierraConexion(conexion);
+        ConexionBD.cierraConexion(conexion);
         return alquileres;
     }
 
-    
     public void abrir(Cliente cliente, Vehiculo vehiculo) {
         if (!vehiculo.getDisponible()) {
             throw new ExcepcionAlquilerVehiculos("El vehículo que quiere alquilar no está disponible");
@@ -48,7 +53,7 @@ public class Alquileres {
         int idCliente = Clientes.getIdentificador(cliente.getDni());
         int idVehiculo = Vehiculos.getIdentificador(vehiculo.getMatricula());
         Vehiculos.setDiponible(idVehiculo, false);
-        Connection conexion = accesoBD.estableceConexion();
+        Connection conexion = ConexionBD.estableceConexion();
         try {
             String sentenciaStr = "insert into alquileres values (?, ?, now(), 0)";
             PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sentenciaStr);
@@ -56,10 +61,10 @@ public class Alquileres {
             sentencia.setInt(2, idVehiculo);
             sentencia.executeUpdate();
         } catch (SQLException e) {
-            accesoBD.cierraConexion(conexion);
+            ConexionBD.cierraConexion(conexion);
             throw new ExcepcionAlquilerVehiculos("SQL Exception: " + e.toString());
         }
-        accesoBD.cierraConexion(conexion);
+        ConexionBD.cierraConexion(conexion);
     }
 
     public void cerrar(Cliente cliente, Vehiculo vehiculo) {
@@ -71,7 +76,7 @@ public class Alquileres {
         }
         alquiler.close();
         Vehiculos.setDiponible(idVehiculo, true);
-        Connection conexion = accesoBD.estableceConexion();
+        Connection conexion = ConexionBD.estableceConexion();
         try {
             String sentenciaStr = "update alquileres set dias = ? where idCliente = ? and idVehiculo = ? and fecha = ?";
             PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sentenciaStr);
@@ -81,17 +86,17 @@ public class Alquileres {
             sentencia.setTimestamp(4, new Timestamp(alquiler.getFecha().getTime()));
             sentencia.executeUpdate();
         } catch (SQLException e) {
-            accesoBD.cierraConexion(conexion);
+            ConexionBD.cierraConexion(conexion);
             throw new ExcepcionAlquilerVehiculos("SQL Exception: " + e.toString());
         }
-        accesoBD.cierraConexion(conexion);
+        ConexionBD.cierraConexion(conexion);
     }
 
     private Alquiler buscarAbierto(Cliente cliente, Vehiculo vehiculo) {
         Alquiler alquiler = null;
         int idCliente = Clientes.getIdentificador(cliente.getDni());
         int idVehiculo = Vehiculos.getIdentificador(vehiculo.getMatricula());
-        Connection conexion = accesoBD.estableceConexion();
+        Connection conexion = ConexionBD.estableceConexion();
         try {
             String sentenciaStr = "select fecha, dias from alquileres where idCliente = ? and idVehiculo = ? and dias = 0";
             PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sentenciaStr);
@@ -104,10 +109,10 @@ public class Alquileres {
                 alquiler = new Alquiler(cliente, vehiculo, fecha, dias);
             }
         } catch (SQLException e) {
-            accesoBD.cierraConexion(conexion);
+            ConexionBD.cierraConexion(conexion);
             throw new ExcepcionAlquilerVehiculos("SQL Exception: " + e.toString());
         }
-        accesoBD.cierraConexion(conexion);
+        ConexionBD.cierraConexion(conexion);
         return alquiler;
     }
 

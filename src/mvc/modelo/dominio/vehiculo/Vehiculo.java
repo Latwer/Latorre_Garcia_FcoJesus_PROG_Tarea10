@@ -9,7 +9,6 @@ import mvc.modelo.dominio.ExcepcionAlquilerVehiculos;
  */
 public abstract class Vehiculo implements Serializable {
 
-    private static final long serialVersionUID = 1L;
     private DatosTecnicosVehiculo datosTecnicos;
     private String matricula, marca, modelo;
     private boolean disponible;
@@ -17,19 +16,26 @@ public abstract class Vehiculo implements Serializable {
     public final double FACTOR_NUMERO_PLAZAS = 1.0;
     public final double FACTOR_PMA = 20.0;
 
-    public Vehiculo(Vehiculo vehiculo) {
-        matricula = vehiculo.getMatricula();
-        marca = vehiculo.getMarca();
-        modelo = vehiculo.getModelo();
-        datosTecnicos = vehiculo.getDatosTecnicos();
-        disponible = vehiculo.getDisponible();
-    }
-
     public Vehiculo(String matricula, String marca, String modelo, DatosTecnicosVehiculo datosTecnicos) {
         setMatricula(matricula);
         setMarca(marca);
         setModelo(modelo);
+        this.datosTecnicos = new DatosTecnicosVehiculo(datosTecnicos);
+        this.disponible = true;
+    }
+
+    /*public Vehiculo(String matricula, String marca, String modelo, DatosTecnicosVehiculo datosTecnicos) {
+        setMatricula(matricula);
+        setMarca(marca);
+        setModelo(modelo);
         setDatosTecnicos(datosTecnicos);
+    }*/
+    public Vehiculo(Vehiculo vehiculo) {
+        matricula = vehiculo.getMatricula();
+        marca = vehiculo.getMarca();
+        modelo = vehiculo.getModelo();
+        datosTecnicos = new DatosTecnicosVehiculo(vehiculo.getDatosTecnicos());
+        disponible = vehiculo.getDisponible();
     }
 
     private void setMatricula(String matricula) {
@@ -62,14 +68,6 @@ public abstract class Vehiculo implements Serializable {
         }
     }
 
-    private void setDatosTecnicos(DatosTecnicosVehiculo datosTecnicos) {
-        if (datosTecnicos != null) {
-            this.datosTecnicos = new DatosTecnicosVehiculo(datosTecnicos);
-        } else {
-            throw new ExcepcionAlquilerVehiculos("El vehiculo debe de tener datos técnicos definidos");
-        }
-    }
-
     public abstract TipoVehiculo getTipoVehiculo();
 
     public abstract double getPrecioEspecifico();
@@ -91,7 +89,7 @@ public abstract class Vehiculo implements Serializable {
     }
 
     public DatosTecnicosVehiculo getDatosTecnicos() {
-        return datosTecnicos;
+        return new DatosTecnicosVehiculo(datosTecnicos);
     }
 
     public void setDisponible(boolean disponible) {

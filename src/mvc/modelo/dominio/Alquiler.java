@@ -20,11 +20,34 @@ public class Alquiler implements Serializable {
     private final double PRECIO_DIA = 30.0;
 
     public Alquiler(Cliente cliente, Vehiculo vehiculo) {
-        setCliente(cliente);
-        setVehiculo(vehiculo);
+        if (cliente != null) {
+            this.cliente = cliente;
+        } else {
+            throw new ExcepcionAlquilerVehiculos("El cliente debe estar identificado");
+        }
+        if (vehiculo != null) {
+            this.vehiculo = vehiculo;
+        } else {
+            throw new ExcepcionAlquilerVehiculos("El vehículo debe estar identificado");
+        }
+        vehiculo.setDisponible(false);
         fecha = new Date();
         dias = 0;
-        vehiculo.setDisponible(false);
+    }
+
+    public Alquiler(Cliente cliente, Vehiculo vehiculo, Date fecha, int dias) {
+        if (cliente != null) {
+            this.cliente = cliente;
+        } else {
+            throw new ExcepcionAlquilerVehiculos("El cliente debe estar identificado");
+        }
+        if (vehiculo != null) {
+            this.vehiculo = vehiculo;
+        } else {
+            throw new ExcepcionAlquilerVehiculos("El vehículo debe estar identificado");
+        }
+        this.fecha = fecha;
+        this.dias = dias;
     }
 
     private void setCliente(Cliente cliente) {
