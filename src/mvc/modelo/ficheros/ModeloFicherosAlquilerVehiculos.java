@@ -1,21 +1,27 @@
-package mvc.modelo;
+package mvc.modelo.ficheros;
 
+import mvc.modelo.ficheros.dao.Vehiculos;
+import mvc.modelo.ficheros.dao.Alquileres;
+import mvc.modelo.ficheros.dao.Clientes;
 import java.util.List;
+import mvc.modelo.IModeloAlquilerVehiculos;
 import mvc.modelo.dominio.vehiculo.Vehiculo;
 import mvc.modelo.dominio.*;
-import mvc.modelo.dao.*;
 import mvc.modelo.dominio.vehiculo.TipoVehiculo;
+import mvc.modelo.ficheros.dao.Alquileres;
+import mvc.modelo.ficheros.dao.Clientes;
+import mvc.modelo.ficheros.dao.Vehiculos;
 
 /**
  * @author Francisco Jesus Latorre Garcia <franlatorregarcia@gmail.com>
  */
-public class AlquilerVehiculos implements IModeloAlquilerVehiculos {
+public class ModeloFicherosAlquilerVehiculos implements IModeloAlquilerVehiculos {
 
     private Clientes clientes;
     private Vehiculos vehiculos;
     private Alquileres alquileres;
 
-    public AlquilerVehiculos() {
+    public ModeloFicherosAlquilerVehiculos() {
         clientes = new Clientes();
         vehiculos = new Vehiculos();
         alquileres = new Alquileres();

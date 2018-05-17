@@ -1,4 +1,4 @@
-package mvc.modelo.dao;
+package mvc.modelo.ficheros.dao;
 
 import java.io.EOFException;
 import java.io.File;
