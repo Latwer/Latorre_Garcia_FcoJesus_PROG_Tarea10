@@ -40,6 +40,7 @@ public class Alquileres {
         return alquileres;
     }
 
+    
     public void abrir(Cliente cliente, Vehiculo vehiculo) {
         if (!vehiculo.getDisponible()) {
             throw new ExcepcionAlquilerVehiculos("El vehículo que quiere alquilar no está disponible");
